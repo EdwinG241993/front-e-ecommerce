@@ -142,7 +142,7 @@ const handleProductCreated = () => {
 };
 
 const getFotoUrl = (foto) => {
-  return `/uploads/${foto}`;
+  return `/${foto}`;
 };
 
 const filteredProducts = computed(() => {

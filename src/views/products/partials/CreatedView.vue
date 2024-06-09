@@ -159,6 +159,10 @@ const addProduct = () => {
     product.fotos = [];
 };
 
+const removePhoto = (index) => {
+    product.fotos.splice(index, 1);
+};
+
 const cancelCreate = () => {
     emit('cancel-create');
 };

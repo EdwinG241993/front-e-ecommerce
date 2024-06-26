@@ -59,6 +59,7 @@ import { ref, onMounted, computed } from 'vue';
 import CreateView from '@/views/products/partials/CreatedView.vue';
 import UpdateView from './partials/UpdateView.vue';
 import axios from 'axios';
+import { useStore } from 'vuex';
 import Swal from 'sweetalert2';
 
 const selectedProductId = ref(null);
@@ -66,9 +67,17 @@ const products = ref([]);
 const viewUpdate = ref(false);
 const viewCreate = ref(false);
 const searchQuery = ref('');
+const store = useStore();
+const token = store.state.token;
+const role = store.state.role;
 
 const listProducts = () => {
-  axios.get('/product')
+  const config = {
+    headers: {
+      token: `${token}` // Pass token in the Authorization header
+    }
+  };
+  axios.get('/product', config)
     .then((response) => {
       products.value = response.data;
     })
@@ -88,27 +97,29 @@ const deleteProduct = (id) => {
     confirmButtonText: 'Sí, eliminarlo!'
   }).then((result) => {
     if (result.isConfirmed) {
-      axios.delete(`product/${id}`)
-        .then(res => {
-          const index = products.value.findIndex(item => item._id === res.data._id);
-          if (index !== -1) {
-            products.value.splice(index, 1);
-          }
-          listProducts();
-          Swal.fire(
-            'Eliminado!',
-            'El producto ha sido eliminado.',
-            'success'
-          )
-        })
-        .catch(e => {
-          console.log(e.response);
-          Swal.fire(
-            'Error!',
-            'Hubo un problema eliminando el producto.',
-            'error'
-          )
-        });
+      axios.delete(`product/${id}`, {
+        headers: {
+          token: `${token}` // Pass token in the Authorization header
+        }
+      }).then(res => {
+        const index = products.value.findIndex(item => item._id === res.data._id);
+        if (index !== -1) {
+          products.value.splice(index, 1);
+        }
+        listProducts();
+        Swal.fire(
+          'Eliminado!',
+          'El producto ha sido eliminado.',
+          'success'
+        )
+      }).catch(e => {
+        console.log(e.response);
+        Swal.fire(
+          'Error!',
+          'Hubo un problema eliminando el producto.',
+          'error'
+        )
+      });
     }
   });
 };

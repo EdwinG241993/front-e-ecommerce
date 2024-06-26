@@ -91,6 +91,7 @@
 import { ref, reactive, defineEmits } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useStore } from 'vuex';
 
 // Definition of issued events
 const emit = defineEmits(['cancel-create', 'product-updated']);
@@ -108,6 +109,8 @@ const products = ref([]);
 const productUpdate = reactive({});
 const validationErrors = reactive({});
 const generalError = ref('');
+const store = useStore();
+const token = store.state.token;
 
 const handleFileUpload = (event) => {
     product.fotos = Array.from(event.target.files);
@@ -129,19 +132,19 @@ const addProduct = () => {
 
     axios.post('new-product', formData, {
         headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            token: `${token}`
         }
+    }).then(res => {
+        // Add to the start of our array products
+        products.value.unshift(res.data);
+        emit('product-created');
+        Swal.fire(
+            'Creado!',
+            'El producto ha sido creado.',
+            'success'
+        );
     })
-        .then(res => {
-            // Add to the start of our array products
-            products.value.unshift(res.data);
-            emit('product-created');
-            Swal.fire(
-                'Creado!',
-                'El producto ha sido creado.',
-                'success'
-            );
-        })
         .catch(e => {
             if (e.response && e.response.data && e.response.data.errors) {
                 Object.assign(validationErrors, e.response.data.errors);

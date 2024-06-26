@@ -62,6 +62,7 @@
 import { ref, reactive, onMounted, defineEmits, defineProps } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useStore } from 'vuex';
 
 // Properties definition
 const props = defineProps({
@@ -75,6 +76,8 @@ const emit = defineEmits(['cancel-update', 'product-updated']);
 const productUpdate = reactive({});
 const validationErrors = reactive({});
 const generalError = ref('');
+const store = useStore();
+const token = store.state.token;
 
 const findId = (id) => {
     axios.get(`product/${id}`)
@@ -88,25 +91,27 @@ const findId = (id) => {
 
 const updateProduct = (item) => {
     Object.keys(validationErrors).forEach(key => validationErrors[key] = '');  // Limpiar errores previos
-    generalError.value = '';  // Limpiar error general
-    axios.put(`product/${item._id}`, item)
-        .then(res => {
-            emit('product-updated');
-            Swal.fire(
-                'Actualizado!',
-                'El producto ha sido actualizado.',
-                'success'
-            );
-        })
-        .catch(e => {
-            console.log(e);
-            if (e.response && e.response.data && e.response.data.errors) {
-                Object.assign(validationErrors, e.response.data.errors);
-                generalError.value = e.response.data.mensaje || 'Errores de validación';
-            } else {
-                generalError.value = 'Error al actualizar el producto';
-            }
-        });
+    generalError.value = '';
+    axios.put(`product/${item._id}`, item, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            token: `${token}`
+        }
+    }).then(res => {
+        emit('product-updated');
+        Swal.fire(
+            'Actualizado!',
+            'El producto ha sido actualizado.',
+            'success'
+        );
+    }).catch(e => {
+        if (e.response && e.response.data && e.response.data.errors) {
+            Object.assign(validationErrors, e.response.data.errors);
+            generalError.value = e.response.data.mensaje || 'Errores de validación';
+        } else {
+            generalError.value = 'Error al actualizar el producto';
+        }
+    });
 };
 
 const cancelUpdate = () => {

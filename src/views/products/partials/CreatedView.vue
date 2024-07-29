@@ -146,6 +146,7 @@ const addProduct = () => {
         );
     })
         .catch(e => {
+            console.log(e);
             if (e.response && e.response.data && e.response.data.errors) {
                 Object.assign(validationErrors, e.response.data.errors);
                 generalError.value = e.response.data.mensaje || 'Errores de validación';

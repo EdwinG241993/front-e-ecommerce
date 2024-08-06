@@ -117,6 +117,8 @@ const handleFileUpload = (event) => {
 };
 
 const addProduct = () => {
+    Object.keys(validationErrors).forEach(key => validationErrors[key] = '');  // Limpiar errores previos
+    generalError.value = '';
     if (product.fotos.length > 4) {
         return;
     }
@@ -144,9 +146,13 @@ const addProduct = () => {
             'El producto ha sido creado.',
             'success'
         );
+        product.codigo = '';
+        product.nombre = '';
+        product.precio = '';
+        product.categoria = '';
+        product.fotos = [];
     })
         .catch(e => {
-            console.log(e);
             if (e.response && e.response.data && e.response.data.errors) {
                 Object.assign(validationErrors, e.response.data.errors);
                 generalError.value = e.response.data.mensaje || 'Errores de validación';
@@ -154,13 +160,6 @@ const addProduct = () => {
                 generalError.value = 'Error al agregar el producto';
             }
         });
-
-    // Reset form
-    product.codigo = '';
-    product.nombre = '';
-    product.precio = '';
-    product.categoria = '';
-    product.fotos = [];
 };
 
 const removePhoto = (index) => {

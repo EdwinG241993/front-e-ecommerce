@@ -31,20 +31,21 @@
           <tr v-for="product in filteredProducts" :key="product.id" class="border-b dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-gray-950 dark:text-gray-800">{{
               product.codigo }}</td>
-            <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ product.precio }}</td>
             <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ product.nombre }}</td>
+            <td class="px-6 py-4 text-gray-950 dark:text-gray-800">${{ product.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}</td>
             <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ product.categoria }}</td>
             <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ product.activo }}</td>
             <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ formatDate(product.date) }}</td>
-            <td class="px-6 py-4">
-              <div v-for="foto in product.fotos" :key="foto" class="mb-2">
-                <img :src="getFotoUrl(foto)" alt="Foto de producto" class="h-16 w-16 object-cover rounded-md">
+            <td class="px-3 py-2">
+              <div class="mb-2">
+                <img :src="getFotoUrl(product.fotos[0])" alt="Foto de producto"
+                  class="h-16 w-16 object-cover rounded-md">
               </div>
             </td>
             <td class="px-6 py-4 flex space-x-2">
-              <button class="btn-warning btn-sm px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+              <button class="btn-warning btn-sm px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                 @click="activeUpdate(product._id)">Actualizar</button>
-              <button class="btn-danger btn-sm px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              <button class="btn-danger btn-sm px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 @click="deleteProduct(product._id)">Eliminar</button>
             </td>
           </tr>

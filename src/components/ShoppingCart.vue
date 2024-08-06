@@ -9,17 +9,19 @@
           <div class="flex items-center">
             <img :src="item.fotos[0]" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
             <div>
-              <p class="font-semibold text-gray-900">{{ item.nombre }}</p>
+              <p class="text-sm font-semibold text-gray-900">{{ item.nombre.slice(0, item.nombre.indexOf(' ',
+                item.nombre.indexOf(' ') + 1)) }}</p>
               <div class="flex space-x-2">
                 <button @click="decrementCount(item)"
                   class="bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full">-</button>
-                <p class="text-sm text-gray-600">Cantidad: {{ item.count }}</p>
+                <p class="text-sm text-gray-600"><small>Cantidad: {{ item.count }}</small></p>
                 <button @click="incrementCount(item)"
                   class="bg-green-500 text-white w-5 h-5 flex items-center justify-center rounded-full">+</button>
               </div>
             </div>
           </div>
-          <p class="font-semibold text-gray-800">${{ item.precio * item.count }}</p>
+          <p class="font-semibold text-gray-800">${{ (item.precio *
+            item.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}</p>
           <button @click="removeFromCart(item)">x</button>
         </div>
       </div>
@@ -40,8 +42,6 @@ const cartWithCount = ref([]);
 const cart = computed(() => store.getters.cart);
 const showCart = inject('showCart');
 const hideCart = inject('hideCart');
-
-console.log("Cart en Shooping",cart);
 
 // Add and update the count field on each cart item
 const updateCartWithCount = (newCart) => {

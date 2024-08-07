@@ -13,40 +13,71 @@
         class="px-5 py-2.5 text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         @click="activeCreate">Crear Producto</button>
     </div>
-    <div class="relative overflow-x-auto bg-white rounded-lg shadow">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-700">
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full text-sm text-left rtl:text-right text-gray-700">
         <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" class="px-6 py-3">Codigo</th>
-            <th scope="col" class="px-6 py-3">Nombre</th>
-            <th scope="col" class="px-6 py-3">Precio</th>
-            <th scope="col" class="px-6 py-3">Categoria</th>
-            <th scope="col" class="px-6 py-3">Activo</th>
-            <th scope="col" class="px-6 py-3">Creado</th>
-            <th scope="col" class="px-6 py-3">Fotos</th>
-            <th scope="col" class="px-6 py-3">Acciones</th>
+            <th scope="col" class="px-2 py-3">Codigo</th>
+            <th scope="col" class="px-2 py-3">Nombre</th>
+            <th scope="col" class="px-2 py-3">Precio</th>
+            <th scope="col" class="px-2 py-3">Stock</th>
+            <th scope="col" class="px-2 py-3">Categoria</th>
+            <th scope="col" class="px-2 py-3">Creado</th>
+            <th scope="col" class="px-2 py-3">Fotos</th>
+            <th scope="col" class="px-2 py-3">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="product in filteredProducts" :key="product.id" class="border-b dark:border-gray-700">
-            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-gray-950 dark:text-gray-800">{{
-              product.codigo }}</td>
-            <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ product.nombre }}</td>
-            <td class="px-6 py-4 text-gray-950 dark:text-gray-800">${{ product.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}</td>
-            <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ product.categoria }}</td>
-            <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ product.activo }}</td>
-            <td class="px-6 py-4 text-gray-950 dark:text-gray-800">{{ formatDate(product.date) }}</td>
-            <td class="px-3 py-2">
+            <td class="px-2 py-4 font-medium text-gray-900 whitespace-nowrap text-gray-950 dark:text-gray-800">
+              {{ product.codigo }}
+            </td>
+            <td class="px-2 py-4 text-gray-950 dark:text-gray-800">
+              <div class="max-w-[200px] overflow-hidden whitespace-nowrap text-ellipsis px-2 text-left">{{
+                product.nombre }}</div>
+            </td>
+            <td class="px-2 py-4 text-gray-950 dark:text-gray-800">${{
+              product.precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}</td>
+            <td class="px-2 py-4 text-gray-950 dark:text-gray-800">{{ product.stock }}</td>
+            <td class="px-2 py-4 text-gray-950 dark:text-gray-800">{{ product.categoria }}</td>
+            <td class="px-2 py-4 text-gray-950 dark:text-gray-800">{{ formatDate(product.date) }}</td>
+            <td class="px-2 py-2">
               <div class="mb-2">
                 <img :src="getFotoUrl(product.fotos[0])" alt="Foto de producto"
-                  class="h-16 w-16 object-cover rounded-md">
+                  class="h-10 w-10 object-cover rounded-md">
               </div>
             </td>
-            <td class="px-6 py-4 flex space-x-2">
-              <button class="btn-warning btn-sm px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                @click="activeUpdate(product._id)">Actualizar</button>
-              <button class="btn-danger btn-sm px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                @click="deleteProduct(product._id)">Eliminar</button>
+            <td class="px-2 py-4 flex flex-wrap space-x-1">
+              <button @click="activeUpdate(product._id)" title="Editar"><svg class="h-6 w-6 text-green-600"
+                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" />
+                  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
+                  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
+                  <line x1="16" y1="5" x2="19" y2="8" />
+                </svg></button>
+              <button @click="deleteProduct(product._id)" title="Eliminar"><svg class="h-6 w-6 text-red-500"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg></button>
+              <button v-if="product.activo" @click="updateProductState(product)" title="Inactivar"><svg
+                  class="h-6 w-6 text-green-600" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                  stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" />
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M9 12l2 2l4 -4" />
+                </svg></button>
+              <button v-if="!product.activo" @click="updateProductState(product)" title="Activar"><svg
+                  class="h-6 w-6 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="15" y1="9" x2="9" y2="15" />
+                  <line x1="9" y1="9" x2="15" y2="15" />
+                </svg></button>
             </td>
           </tr>
         </tbody>
@@ -121,6 +152,49 @@ const deleteProduct = (id) => {
           'error'
         )
       });
+    }
+  });
+};
+
+const updateProductState = (item) => {
+  const activo = item.activo ? false : true;
+  const data = { activo: activo };
+
+  axios.patch(`product/${item._id}`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+      token: `${token}`
+    }
+  }).then(res => {
+    let timerInterval;
+    if (data.activo) {
+      Swal.fire({
+        title: "Activando!",
+        showConfirmButton: false,
+        icon: "success",
+        timer: 1500,
+        willClose: () => {
+          clearInterval(timerInterval);
+        }
+      });
+    } else {
+      Swal.fire({
+        title: "Desactivando!",
+        showConfirmButton: false,
+        icon: "error",
+        timer: 1500,
+        willClose: () => {
+          clearInterval(timerInterval);
+        }
+      });
+    }
+    listProducts();
+  }).catch(e => {
+    if (e.response && e.response.data && e.response.data.errors) {
+      Object.assign(validationErrors, e.response.data.errors);
+      generalError.value = e.response.data.mensaje || 'Errores de validación';
+    } else {
+      generalError.value = 'Error al actualizar el producto';
     }
   });
 };

@@ -46,7 +46,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-***REMOVED***
+const user = reactive({ email: 'prueba1@bluuweb.cl' });
 const mensaje = ref('');
 const store = useStore();
 const router = useRouter();

@@ -31,15 +31,53 @@ import { computed, onMounted, watch, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Modal from './components/Modal.vue';
 import ShoppingCart from './components/ShoppingCart.vue';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const store = useStore();
 const router = useRouter();
 const isCartVisible = ref(false);
 const role = computed(() => store.state.role);
 const stateActive = computed(() => store.getters.stateActive);
-
+const token = computed(() => store.state.token);
+const user = computed(() => store.state.usuarioDB); 
+console.log(user.value);
 const logout = () => {
-  store.dispatch('logout');
+  Swal.fire({
+    title: '¿Estás seguro que deseas salir?',
+    text: "¡No podrás revertir esto!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí!'
+  }).then((result) => {
+
+    if (result.isConfirmed) {
+      axios.post('/logout', {}, {
+        headers: {
+          token: `${token.value}` // Pasar el token en el header de Authorization
+        },
+        withCredentials: true // Asegura que las cookies de sesión se envían
+      })
+        .then(res => {
+          store.dispatch('logout');
+          Swal.fire(
+            '¡Ha salido!',
+            'Cerraste sesión.',
+            'success'
+          );
+          router.push({ name: 'home' });
+        })
+        .catch(e => {
+          Swal.fire(
+            'Error!',
+            'Hubo un problema cerrando sesión.',
+            'error'
+          );
+        });
+    }
+  });
 };
 
 const readToken = () => {

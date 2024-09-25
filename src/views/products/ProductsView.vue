@@ -100,13 +100,12 @@ const viewUpdate = ref(false);
 const viewCreate = ref(false);
 const searchQuery = ref('');
 const store = useStore();
-const token = store.state.token;
-const role = store.state.role;
+const token = computed(() => store.state.token);
 
 const listProducts = () => {
   const config = {
     headers: {
-      token: `${token}` // Pass token in the Authorization header
+      token: `${token.value}` // Pass token in the Authorization header
     }
   };
   axios.get('/product', config)
@@ -131,8 +130,9 @@ const deleteProduct = (id) => {
     if (result.isConfirmed) {
       axios.delete(`product/${id}`, {
         headers: {
-          token: `${token}` // Pass token in the Authorization header
-        }
+          token: `${token.value}` // Pass token in the Authorization header
+        },
+        withCredentials: true
       }).then(res => {
         const index = products.value.findIndex(item => item._id === res.data._id);
         if (index !== -1) {
@@ -163,8 +163,9 @@ const updateProductState = (item) => {
   axios.patch(`product/${item._id}`, data, {
     headers: {
       'Content-Type': 'application/json',
-      token: `${token}`
-    }
+      token: `${token.value}`
+    },
+    withCredentials: true
   }).then(res => {
     let timerInterval;
     if (data.activo) {

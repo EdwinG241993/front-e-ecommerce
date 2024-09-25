@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits } from 'vue';
+import { computed, ref, reactive, defineEmits } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useStore } from 'vuex';
@@ -123,7 +123,7 @@ const productUpdate = reactive({});
 const validationErrors = reactive({});
 const generalError = ref('');
 const store = useStore();
-const token = store.state.token;
+const token = computed(() => store.state.token);
 
 const handleFileUpload = (event) => {
     product.fotos = Array.from(event.target.files);
@@ -145,12 +145,13 @@ const addProduct = () => {
     for (let i = 0; i < product.fotos.length; i++) {
         formData.append('fotos', product.fotos[i]);
     }
-
+    console.log(token.value);
     axios.post('new-product', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            token: `${token}`
-        }
+            token: `${token.value}`
+        },
+        withCredentials: true
     }).then(res => {
         // Add to the start of our array products
         products.value.unshift(res.data);
@@ -168,6 +169,7 @@ const addProduct = () => {
         product.fotos = [];
     })
         .catch(e => {
+            console.log(e);
             if (e.response && e.response.data && e.response.data.errors) {
                 Object.assign(validationErrors, e.response.data.errors);
                 generalError.value = e.response.data.mensaje || 'Errores de validación';

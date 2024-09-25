@@ -46,14 +46,16 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-const user = reactive({ email: 'prueba1@bluuweb.cl', pass: '@Edwin123' });
+const user = reactive({ email: 'prueba1@bluuweb.cl' });
 const mensaje = ref('');
 const store = useStore();
 const router = useRouter();
 
 const login = async () => {
     try {
-        const res = await axios.post('/login', user);
+        const res = await axios.post('/login', user, {
+            withCredentials: true // Enable sending cookies
+        });
         if (res.data && res.data.token) {
             const token = res.data.token;
 
@@ -63,7 +65,6 @@ const login = async () => {
             throw new Error('Token no encontrado en la respuesta del servidor');
         }
     } catch (err) {
-        console.error(err);
         mensaje.value = err.response?.data?.mensaje || 'Error en la solicitud de login';
     }
 };

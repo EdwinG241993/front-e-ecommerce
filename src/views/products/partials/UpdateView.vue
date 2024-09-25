@@ -108,7 +108,8 @@ const updateProduct = (item) => {
         headers: {
             'Content-Type': 'multipart/form-data',
             token: `${token}`
-        }
+        },
+        withCredentials: true
     }).then(res => {
         emit('product-updated');
         Swal.fire(

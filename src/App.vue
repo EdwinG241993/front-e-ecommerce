@@ -20,7 +20,8 @@
     </div>
   </nav>
   <router-view />
-  <Modal :show="isCartVisible" @mouseenter="showCart" @mouseleave="hideCart">
+  <Modal :show="isCartVisible" @mouseenter="showCart" @mouseleave="hideCart"
+    class="fixed top-[40px] right-[10px] z-50 flex bg-white shadow-lg p-4 rounded-md">
     <ShoppingCart />
   </Modal>
 </template>
@@ -40,7 +41,7 @@ const isCartVisible = ref(false);
 const role = computed(() => store.state.role);
 const stateActive = computed(() => store.getters.stateActive);
 const token = computed(() => store.state.token);
-const user = computed(() => store.state.usuarioDB); 
+const user = computed(() => store.state.usuarioDB);
 console.log(user.value);
 const logout = () => {
   Swal.fire({

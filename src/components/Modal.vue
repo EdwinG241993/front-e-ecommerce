@@ -1,6 +1,5 @@
 <template>
-    <div v-if="show" @mouseenter="showCart" @mouseleave="hideCart"
-        class="fixed top-[40px] right-[10px] z-50 flex bg-white shadow-lg p-4 rounded-md">
+    <div v-if="show" @mouseenter="showCart" @mouseleave="hideCart">
         <slot></slot>
     </div>
 </template>
